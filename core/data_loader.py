@@ -72,3 +72,16 @@ class DataLoader:
         except Exception as e:
             print(f"Failed to fetch {symbol}: {e}")
             return None
+"""
+import pandas as pd
+
+# Завантаження даних
+file_path = "data/btc_1m_2025-02.parquet"
+df = pd.read_parquet(file_path)
+
+# Відображення перших рядків
+print(df.head())
+
+# Загальна інформація про датафрейм
+print(df.info())
+"""
