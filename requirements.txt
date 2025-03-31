@@ -6,6 +6,5 @@ ccxt
 vectorbt
 seaborn
 plotly
-abc
 backtrader
 pytest
