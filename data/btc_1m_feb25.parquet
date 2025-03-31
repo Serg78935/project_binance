@@ -1,9 +1,2 @@
 
-# Вхідні дані
-"""
-from core.data_loader import DataLoader  
-loader = DataLoader()
-df = loader.load()
-print(df.head())  # Переконайтесь, що дані є
-"""
 
