@@ -11,14 +11,14 @@ class RSI_Bollinger(StrategyBase):
         self.rsi_lower = rsi_lower
     
     def generate_signals(self) -> pd.DataFrame:
-        self.price_data['RSI'] = self.price_data['Close'].rolling(window=self.rsi_period).mean()
-        self.price_data['BB_Lower'] = self.price_data['Close'].rolling(window=self.bb_period).mean() - 2 * self.price_data['Close'].rolling(window=self.bb_period).std()
-        self.price_data['Signal'] = ((self.price_data['RSI'] < self.rsi_lower) & (self.price_data['Close'] > self.price_data['BB_Lower'])).astype(int)
+        self.price_data['RSI'] = self.price_data['close'].rolling(window=self.rsi_period).mean()
+        self.price_data['BB_Lower'] = self.price_data['close'].rolling(window=self.bb_period).mean() - 2 * self.price_data['close'].rolling(window=self.bb_period).std()
+        self.price_data['Signal'] = ((self.price_data['RSI'] < self.rsi_lower) & (self.price_data['close'] > self.price_data['BB_Lower'])).astype(int)
         self.signals = self.price_data[['Signal']]
         return self.signals
     
     def run_backtest(self) -> pd.DataFrame:
-        self.price_data['Returns'] = self.price_data['Close'].pct_change()
+        self.price_data['Returns'] = self.price_data['close'].pct_change()
         self.price_data['Strategy_Returns'] = self.price_data['Returns'] * self.price_data['Signal'].shift(1)
         self.backtest_results = self.price_data[['Strategy_Returns']]
         return self.backtest_results
