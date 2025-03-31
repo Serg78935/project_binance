@@ -9,3 +9,4 @@ seaborn
 plotly
 backtrader
 pytest
+pyarrow
