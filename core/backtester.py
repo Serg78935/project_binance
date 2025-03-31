@@ -21,7 +21,7 @@ class Backtester:
         self.strategy.run_backtest()
         price_data = self.strategy.price_data
         signals = self.strategy.signals
-        returns = price_data['Close'].pct_change()
+        returns = price_data['close'].pct_change()
         pf = vbt.IndicatorFactory.from_pandas(signals).run()
         portfolio = vbt.IndicatorFactory.from_pandas(returns * signals.shift(1)).run()
         
