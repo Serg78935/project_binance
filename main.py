@@ -18,6 +18,7 @@ print(df.head())
 #data = DataLoader.load("data/btc_1m_2025-02.parquet")
 
 # Завантаження даних
+import pandas as pd
 file_path = "data/btc_1m_2025-02.parquet"
 df = pd.read_parquet(file_path)
 
