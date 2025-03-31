@@ -6,10 +6,9 @@ from core.backtester import Backtester
 from strategies.sma_cross import SMACrossover 
 
 # Тестові дані
-dummy_data = pd.DataFrame({
-    'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
-    'close': [100 + i for i in range(10)]
-})
+#dummy_data = pd.DataFrame({
+ #   'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
+ #   'close': [100 + i for i in range(10)]})
 def test_backtester_runs():
     data = pd.DataFrame({
         'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
@@ -19,8 +18,8 @@ def test_backtester_runs():
         'close': [100 + i for i in range(10)],
         'volume': [10] * 10
     })
-    strategy = SMACrossover(price_data=dummy_data)
-    backtester = Backtester(strategy, data)
+    strategy = SMACrossover(price_data=data)
+    backtester = Backtester(strategy)
     results = backtester.run()
     assert 'equity_curve' in results, "Backtester should return results with equity_curve"
 
