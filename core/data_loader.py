@@ -1,83 +1,74 @@
 
 import os
-import hashlib
-import requests
 import pandas as pd
-import pyarrow.parquet as pq
-from concurrent.futures import ThreadPoolExecutor
+import requests
+from pathlib import Path
 
-data_dir = "data_cache"
-os.makedirs(data_dir, exist_ok=True)
+class DataLoader:
+    def __init__(self, data_dir='data', month='2025-02', top_n=100):
+        self.data_dir = Path(data_dir)
+        self.month = month
+        self.top_n = top_n
+        self.filepath = self.data_dir / f'btc_1m_{month}.parquet'
+        self.url_template = f"https://data.binance.vision/data/spot/monthly/klines/{{symbol}}/1m/{{symbol}}-1m-{self.month}.zip"
 
-def download_binance_data(symbol: str, date: str) -> str:
-    url = f"https://data.binance.vision/data/spot/monthly/klines/{symbol}/1m/{symbol}-1m-{date}.zip"
-    local_path = os.path.join(data_dir, f"{symbol}-{date}.zip")
+    def load(self):
+        if self.filepath.exists():
+            print("Using cached data.")
+            return pd.read_parquet(self.filepath)
+        
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        symbols = self._get_top_symbols()
+        all_data = []
+        
+        for symbol in symbols:
+            df = self._fetch_data(symbol)
+            if df is not None:
+                df['symbol'] = symbol
+                all_data.append(df)
+        
+        if all_data:
+            final_df = pd.concat(all_data)
+            final_df.to_parquet(self.filepath, compression='snappy')
+            return final_df
+        else:
+            raise Exception("No data downloaded!")
 
-    if os.path.exists(local_path):
-        return local_path  # Кешування: файл уже завантажено
-
-    response = requests.get(url, stream=True)
-
-    if response.status_code == 200:
-        with open(local_path, "wb") as f:
-            f.write(response.content)
-        return local_path
-    elif response.status_code == 404:  # Якщо файл не існує
-        print(f"⚠️  No data for {symbol} on {date}. Skipping.")
-        return None
-    else:
-        raise Exception(f"Failed to download {symbol} data for {date} - HTTP {response.status_code}")
-
-
-def extract_csv_from_zip(zip_path: str) -> pd.DataFrame:
-    import zipfile
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        csv_file = zip_ref.namelist()[0]
-        with zip_ref.open(csv_file) as f:
-            return pd.read_csv(f, header=None)
-
-def hash_file(file_path: str) -> str:
-    hasher = hashlib.sha256()
-    with open(file_path, 'rb') as f:
-        hasher.update(f.read())
-    return hasher.hexdigest()
-
-def load_data_for_symbol(symbol: str, dates: list) -> pd.DataFrame:
-    df_list = []
-    for date in dates:
-        zip_path = download_binance_data(symbol, date)
-        if zip_path:  # Пропускати, якщо файл відсутній
-            df = extract_csv_from_zip(zip_path)
-            df_list.append(df)
+    def _get_top_symbols(self):
+        url = "https://api.binance.com/api/v3/ticker/24hr"
+        response = requests.get(url)
+        data = response.json()
+        
+        btc_pairs = [item for item in data if item['symbol'].endswith('BTC')]
+        sorted_pairs = sorted(btc_pairs, key=lambda x: float(x['quoteVolume']), reverse=True)
+        return [pair['symbol'] for pair in sorted_pairs[:self.top_n]]
     
-    return pd.concat(df_list, ignore_index=True) if df_list else pd.DataFrame()
 
+    def _fetch_data(self, symbol):
+        url = self.url_template.format(symbol=symbol)
+        zip_path = self.data_dir / f"{symbol}.zip"
+        csv_path = self.data_dir / f"{symbol}.csv"
 
-def get_top_liquid_pairs() -> list:
-    url = "https://api.binance.com/api/v3/ticker/24hr"
-    response = requests.get(url)
-    data = response.json()
-    
-    btc_pairs = [d for d in data if d['symbol'].endswith('BTC')]
-    sorted_pairs = sorted(btc_pairs, key=lambda x: float(x['quoteVolume']), reverse=True)
-    return [d['symbol'] for d in sorted_pairs[:100]]
+        try:
+            response = requests.get(url, stream=True)
+            with open(zip_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=1024):
+                    f.write(chunk)
+            
+            pd.read_csv(zip_path, compression='zip').to_csv(csv_path, index=False)
+            df = pd.read_csv(csv_path, header=None, sep=",",
+                 names=['timestamp', 'open', 'high', 'low', 'close', 'volume', 
+                        'close_time', 'quote_asset_volume', 'num_trades', 
+                        'taker_buy_base', 'taker_buy_quote', 'ignore'],
+                 dtype={"open": str, "high": str, "low": str, "close": str, "volume": str})
+            for col in ['open', 'high', 'low', 'close', 'volume']:
+                df[col] = df[col].str.replace(r"[^\d.]", "", regex=True)  # Видаляємо непотрібні символи
+                df[col] = pd.to_numeric(df[col], errors="coerce")  # Конвертуємо у float
+            df = df.dropna(subset=['open', 'high', 'low', 'close', 'volume'])
+            df = df[['timestamp', 'open', 'high', 'low', 'close', 'volume']]
+            df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms', errors='coerce')
 
-def save_parquet(df: pd.DataFrame, output_path: str):
-    df.to_parquet(output_path, engine='pyarrow', compression='snappy')
-
-def load_and_save_data():
-    dates = [f"2025-02"]  # Формат без дня, оскільки Binance зберігає дані по місяцях
-    top_pairs = get_top_liquid_pairs()
-    
-    all_data = []
-    with ThreadPoolExecutor(max_workers=5) as executor:
-        results = list(executor.map(lambda symbol: load_data_for_symbol(symbol, dates), top_pairs))
-        all_data.extend(results)
-    
-    if all_data:  # Перевірка, чи список не порожній
-        df = pd.concat(all_data, ignore_index=True)
-        output_file = os.path.join(data_dir, "btc_1m_feb25.parquet")  
-        save_parquet(df, output_file)
-        print(f"✅ Data saved to {output_file} with SHA-256: {hash_file(output_file)}")
-    else:
-        print("⚠️ No data available for the selected period.")
+            return df
+        except Exception as e:
+            print(f"Failed to fetch {symbol}: {e}")
+            return None
