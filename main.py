@@ -14,12 +14,15 @@ df = pd.read_parquet("data/btc_1m_2025-02.parquet")
 print(df.head())
 """
 
+# Завантаження даних
+#data = DataLoader.load("data/btc_1m_2025-02.parquet")
 
 # Завантаження даних
-data = DataLoader.load("data/btc_1m_2025-02.parquet")
+file_path = "data/btc_1m_2025-02.parquet"
+df = pd.read_parquet(file_path)
 
 # Запуск бектесту
-strategy = SMACrossover(data)
+strategy = SMACrossover(df)
 backtester = Backtester(strategy)
 results = backtester.run()
 
