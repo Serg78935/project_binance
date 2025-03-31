@@ -23,8 +23,8 @@ class Backtester:
         signals = self.strategy.signals
         returns = price_data['close'].pct_change()
         pf = vbt.IndicatorFactory.from_pandas(signals).run()
-        portfolio = vbt.IndicatorFactory.from_pandas(returns * signals.shift(1)).run()
-        
+        portfolio = vbt.IndicatorFactory.from_pandas_ta(returns * signals.shift(1)).run()
+
         self.metrics = {
             'Total Return': portfolio.total_return().values[0],
             'Sharpe Ratio': portfolio.sharpe_ratio().values[0],
