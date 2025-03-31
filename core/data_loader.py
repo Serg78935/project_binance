@@ -13,7 +13,7 @@ class DataLoader:
         self.url_template = f"https://data.binance.vision/data/spot/monthly/klines/{{symbol}}/1m/{{symbol}}-1m-{self.month}.zip"
 
     def load(self):
-        if self.filepath.exists():
+        if Path(self.filepath).exists():
             print("Using cached data.")
             return pd.read_parquet(self.filepath)
         
