@@ -9,14 +9,14 @@ class VWAPReversion(StrategyBase):
         self.dev_threshold = dev_threshold
     
     def generate_signals(self) -> pd.DataFrame:
-        self.price_data['VWAP'] = self.price_data['Close'].expanding().mean()
-        self.price_data['Signal'] = ((self.price_data['Close'] < self.price_data['VWAP'] * (1 - self.dev_threshold)).astype(int) - 
-                             (self.price_data['Close'] > self.price_data['VWAP'] * (1 + self.dev_threshold)).astype(int))
+        self.price_data['VWAP'] = self.price_data['close'].expanding().mean()
+        self.price_data['Signal'] = ((self.price_data['close'] < self.price_data['VWAP'] * (1 - self.dev_threshold)).astype(int) - 
+                             (self.price_data['close'] > self.price_data['VWAP'] * (1 + self.dev_threshold)).astype(int))
         self.signals = self.price_data[['Signal']]
         return self.signals
     
     def run_backtest(self) -> pd.DataFrame:
-        self.price_data['Returns'] = self.price_data['Close'].pct_change()
+        self.price_data['Returns'] = self.price_data['close'].pct_change()
         self.price_data['Strategy_Returns'] = self.price_data['Returns'] * self.price_data['Signal'].shift(1)
         self.backtest_results = self.price_data[['Strategy_Returns']]
         return self.backtest_results
