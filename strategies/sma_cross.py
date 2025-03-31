@@ -9,14 +9,14 @@ class SMACrossover(StrategyBase):
         self.slow = slow
     
     def generate_signals(self) -> pd.DataFrame:
-        self.price_data['SMA_Fast'] = self.price_data['Close'].rolling(window=self.fast).mean()
-        self.price_data['SMA_Slow'] = self.price_data['Close'].rolling(window=self.slow).mean()
+        self.price_data['SMA_Fast'] = self.price_data['close'].rolling(window=self.fast).mean()
+        self.price_data['SMA_Slow'] = self.price_data['close'].rolling(window=self.slow).mean()
         self.price_data['Signal'] = (self.price_data['SMA_Fast'] > self.price_data['SMA_Slow']).astype(int)
         self.signals = self.price_data[['Signal']]
         return self.signals
     
     def run_backtest(self) -> pd.DataFrame:
-        self.price_data['Returns'] = self.price_data['Close'].pct_change()
+        self.price_data['Returns'] = self.price_data['close'].pct_change()
         self.price_data['Strategy_Returns'] = self.price_data['Returns'] * self.price_data['Signal'].shift(1)
         self.backtest_results = self.price_data[['Strategy_Returns']]
         return self.backtest_results
