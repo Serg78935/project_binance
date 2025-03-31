@@ -8,6 +8,7 @@ import vectorbt as vbt
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+import pandas_ta
 
 
 class Backtester:
