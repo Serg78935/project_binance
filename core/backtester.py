@@ -22,7 +22,7 @@ class Backtester:
         price_data = self.strategy.price_data
         signals = self.strategy.signals
         returns = price_data['close'].pct_change()
-        pf = vbt.IndicatorFactory.from_pandas(signals).run()
+        pf = vbt.IndicatorFactory.from_pandas_ta(signals).run()
         portfolio = vbt.IndicatorFactory.from_pandas_ta(returns * signals.shift(1)).run()
 
         self.metrics = {
