@@ -4,7 +4,7 @@ from strategies.sma_cross import SMACrossover  # або іншу стратег�
 from core.data_loader import DataLoader
 
 # Завантаження даних
-data = DataLoader.load("data/btc_1m_feb25.parquet")
+data = DataLoader.load("data/btc_1m_2025-02.parquet")
 
 # Запуск бектесту
 strategy = SMACrossover()
