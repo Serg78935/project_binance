@@ -38,8 +38,8 @@ class DataLoader:
         url = "https://api.binance.com/api/v3/ticker/24hr"
         response = requests.get(url)
         data = response.json()
-        #data = pd.read_json(self.filepath, orient="records").to_dict(orient="records")
-        print("DEBUG: data =", data, type(data))
+        if isinstance(data, dict) and "msg" in data:
+            raise RuntimeError(f"Binance API error: {data['msg']}")
 
         btc_pairs = [item for item in data if item['symbol'].endswith('BTC')]
         sorted_pairs = sorted(btc_pairs, key=lambda x: float(x['quoteVolume']), reverse=True)
