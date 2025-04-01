@@ -37,7 +37,9 @@ class DataLoader:
     def _get_top_symbols(self):
         url = "https://api.binance.com/api/v3/ticker/24hr"
         response = requests.get(url)
-        data = response.json()
+        #data = response.json()
+        data = pd.read_json(self.filepath, orient="records").to_dict(orient="records")
+
         
         btc_pairs = [item for item in data if item['symbol'].endswith('BTC')]
         sorted_pairs = sorted(btc_pairs, key=lambda x: float(x['quoteVolume']), reverse=True)
