@@ -10,3 +10,6 @@ plotly
 backtrader
 pytest
 pyarrow
+time
+ta
+abc
