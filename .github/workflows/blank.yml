@@ -28,8 +28,6 @@ jobs:
         source venv/bin/activate
         pip install --upgrade pip
         pip install -r requirements.txt
-        pip install vectorbt
-        pip install pandas_ta
 
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
