@@ -6,6 +6,12 @@ from pathlib import Path
 import datetime  
 from tqdm import tqdm 
 from core.binance_api import BinanceAPI
+from binance.client import Client
+
+client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
+# Отримати всі пари BTC
+tickers = client.get_ticker_24hr()
+btc_pairs = [item for item in tickers if item['symbol'].endswith('BTC')]
 
 class DataLoader:
     def __init__(self, data_dir='data', month='2025-02', top_n=100, config_path="config.json"): 
@@ -51,8 +57,10 @@ class DataLoader:
             raise Exception("No data downloaded!")
 
     def _get_top_symbols(self):
-        data = self.api.get_ticker_24hr()
-
+        client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
+        # Отримати всі пари BTC
+        data = client.get_ticker_24hr()
+    
         if not isinstance(data, list):
             raise Exception(f"Неочікуваний формат відповіді: {data}")
     
