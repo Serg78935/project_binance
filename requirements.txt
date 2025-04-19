@@ -11,4 +11,3 @@ backtrader
 pytest
 pyarrow
 ta
-abc
