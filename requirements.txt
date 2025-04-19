@@ -1,4 +1,5 @@
 
+python-binance
 pandas
 pandas_ta
 numpy
