@@ -4,13 +4,15 @@ import requests
 import pandas as pd
 from pathlib import Path
 import datetime  
-from tqdm import tqdm  
+from tqdm import tqdm 
+from core.binance_api import BinanceAPI
 
 class DataLoader:
-    def __init__(self, data_dir='data', month='2025-02', top_n=100): 
+    def __init__(self, data_dir='data', month='2025-02', top_n=100, config_path="config.json"): 
         self.data_dir = Path(data_dir)
         self.month = month
         self.top_n = top_n
+        self.api = BinanceAPI(config_path)
         self.filepath = self.data_dir / f'btc_1m_{month}.parquet'
         self.url_template = f"https://data.binance.vision/data/spot/monthly/klines/{{symbol}}/1m/{{symbol}}-1m-{self.month}.zip"
 
@@ -49,14 +51,8 @@ class DataLoader:
             raise Exception("No data downloaded!")
 
     def _get_top_symbols(self):
-        url = "https://api.binance.com/api/v3/ticker/24hr"
-        response = requests.get(url)
-        
-        try:
-            data = response.json()
-        except ValueError:
-            raise Exception("Не вдалося декодувати JSON-відповідь")
-    
+        data = self.api.get_ticker_24hr()
+
         if not isinstance(data, list):
             raise Exception(f"Неочікуваний формат відповіді: {data}")
     
