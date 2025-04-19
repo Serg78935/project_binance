@@ -10,6 +10,5 @@ plotly
 backtrader
 pytest
 pyarrow
-datetime
 ta
 abc
