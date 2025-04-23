@@ -5,20 +5,19 @@ import pandas as pd
 from pathlib import Path
 import datetime  
 from tqdm import tqdm 
-from core.binance_api import BinanceAPI
-from binance.client import Client
+#from binance.client import Client
 
-client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
+#client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
 # Отримати всі пари BTC
-tickers = client.get_ticker_24hr()
-btc_pairs = [item for item in tickers if item['symbol'].endswith('BTC')]
+#tickers = client.get_ticker_24hr()
+#btc_pairs = [item for item in tickers if item['symbol'].endswith('BTC')]
 
 class DataLoader:
     def __init__(self, data_dir='data', month='2025-02', top_n=100, config_path="config.json"): 
         self.data_dir = Path(data_dir)
         self.month = month
         self.top_n = top_n
-        self.api = BinanceAPI(config_path)
+        #self.api = BinanceAPI(config_path)
         self.filepath = self.data_dir / f'btc_1m_{month}.parquet'
         self.url_template = f"https://data.binance.vision/data/spot/monthly/klines/{{symbol}}/1m/{{symbol}}-1m-{self.month}.zip"
 
@@ -57,9 +56,12 @@ class DataLoader:
             raise Exception("No data downloaded!")
 
     def _get_top_symbols(self):
-        client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
+        url = "https://api.binance.com/api/v3/ticker/24hr"
+        response = requests.get(url)
+        data = response.json()
+        #client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
         # Отримати всі пари BTC
-        data = client.get_ticker_24hr()
+        #data = client.get_ticker_24hr()
     
         if not isinstance(data, list):
             raise Exception(f"Неочікуваний формат відповіді: {data}")
