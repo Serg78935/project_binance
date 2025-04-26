@@ -63,7 +63,7 @@ class Backtester:
         equity_curve_path = f"results/plots/{symbol}_{self.strategy_name}.html"
         os.makedirs(os.path.dirname(equity_curve_path), exist_ok=True)
         fig = pf.plot(title=f"{symbol} - {self.strategy_name}")
-        fig.write_image(equity_curve_path)
+        #fig.write_image(equity_curve_path)
         fig.write_html(equity_curve_path)
 
     # Heatmap по performance
