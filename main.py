@@ -15,8 +15,8 @@ print(df.head())  # Переконайтесь, що дані є
 # Стратегії
 backtesters = [
     Backtester(df, SMACrossover, "sma_cross"),
-    Backtester(df, RSI_Bollinger, "rsi_bb"),
-    Backtester(df, VWAPReversion, "vwap_reversion")
+   # Backtester(df, RSI_Bollinger, "rsi_bb"),
+   # Backtester(df, VWAPReversion, "vwap_reversion")
 ]
 
 print("Starting backtest...")
