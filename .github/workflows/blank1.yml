@@ -27,3 +27,9 @@ jobs:
         run: |
           source venv/bin/activate
           python main.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results
+          path: results/
