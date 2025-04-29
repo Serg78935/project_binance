@@ -9,7 +9,8 @@ from strategies.vwap_reversion import VWAPReversion
 # Тестові дані
 price_data = pd.DataFrame({
     'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
-    'close': [100 + i for i in range(10)]
+    'close': [100 + i for i in range(10)],
+    'volume': [10] * 10
 })
 
 def test_sma_cross():
