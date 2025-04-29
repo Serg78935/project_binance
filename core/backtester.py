@@ -69,6 +69,10 @@ class Backtester:
     # Heatmap по performance
     def performance_heatmap(self):
         heatmap_df = pd.DataFrame(self.heatmap_data)
+        if len(heatmap_df) < 100:
+            print("Not enough data for 10x10 heatmap, skipping.")
+            return  # або побудуйте меншу heatmap, якщо хочете
+            
         heatmap_df_sorted = heatmap_df.sort_values(by="total_return", ascending=False)
 
         heatmap_df_sorted["tooltip"] = (
