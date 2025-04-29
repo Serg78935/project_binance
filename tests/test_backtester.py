@@ -18,8 +18,10 @@ def test_backtester_runs():
         'close': [100 + i for i in range(10)],
         'volume': [10] * 10
     })
+    strategy_name = "sma_cross"
+    strategy_func = SMACrossover
     strategy = SMACrossover(price_data=data)
-    backtester = Backtester(strategy)
+    backtester = Backtester(data, strategy_func, strategy_name)
     results = backtester.run()
     assert 'equity_curve' in results, "Backtester should return results with equity_curve"
 
