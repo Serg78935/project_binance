@@ -18,6 +18,8 @@ def test_backtester_runs():
         'close': [100 + i for i in range(10)],
         'volume': [10] * 10
     })
+    data['symbol'] = 'TEST'
+
     strategy_name = "sma_cross"
     strategy_func = SMACrossover
     strategy = SMACrossover(price_data=data)
