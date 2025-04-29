@@ -54,7 +54,8 @@ class Backtester:
             })
 
             self.plot_equity_curve(symbol,pf)
-            return metrics
+            #return metrics
+            return self.all_metrics
 
         self.performance_heatmap()
         self.save_results()
