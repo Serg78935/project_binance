@@ -1,11 +1,9 @@
 
 import os
 import pandas as pd
-import numpy as np
 import vectorbt as vbt
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly.io as pio
 from core.metrics import compute_metrics    
 
 class Backtester:
