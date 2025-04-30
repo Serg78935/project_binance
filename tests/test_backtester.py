@@ -25,5 +25,7 @@ def test_backtester_runs():
     strategy = SMACrossover(price_data=data)
     backtester = Backtester(data, strategy_func, strategy_name)
     results = backtester.run()
-    assert 'equity_curve' in results, "Backtester should return results with equity_curve"
+    assert isinstance(results, list), "Backtester should return a list of results"
+    assert 'equity_curve' in results[0], "Each result should contain 'equity_curve'"
+
 
