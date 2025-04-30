@@ -6,9 +6,6 @@ from core.backtester import Backtester
 from strategies.sma_cross import SMACrossover 
 
 # Тестові дані
-#dummy_data = pd.DataFrame({
- #   'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
- #   'close': [100 + i for i in range(10)]})
 def test_backtester_runs():
     data = pd.DataFrame({
         'time': pd.date_range(start='2025-02-01', periods=10, freq='min'),
