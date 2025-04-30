@@ -57,7 +57,7 @@ class Backtester:
 
         self.performance_heatmap()
         self.save_results()
-        return self.plot_equity_curve(symbol,pf)
+        return symbol, pf
     
     # Equity curve
     def plot_equity_curve(self,symbol,pf):    
