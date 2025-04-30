@@ -1,12 +1,8 @@
-
-python-binance
+requests
 pandas
-pandas_ta
 numpy
 matplotlib
-ccxt
 vectorbt
-seaborn
 plotly
 backtrader
 pytest
