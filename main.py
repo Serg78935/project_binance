@@ -14,9 +14,9 @@ print(df.head())  # Переконайтесь, що дані є
 
 # Стратегії
 backtesters = [
-   # Backtester(df, SMACrossover, "sma_cross"),
-   # Backtester(df, RSI_Bollinger, "rsi_bb"),
-   # Backtester(df, VWAPReversion, "vwap_reversion")
+    Backtester(df, SMACrossover, "sma_cross"),
+    Backtester(df, RSI_Bollinger, "rsi_bb"),
+    Backtester(df, VWAPReversion, "vwap_reversion")
 ]
 
 print("Starting backtest...")
@@ -34,11 +34,7 @@ backtester.compare_strategies_full([
     "results/metrics_vwap_reversion.csv"
 ])
 
-
 end_time = time.time()
 print(f"Backtest completed in {end_time - start_time} seconds.")
-
-#print("Backtest завершено, результати збережено у results/metrics.csv")
-
 
 
