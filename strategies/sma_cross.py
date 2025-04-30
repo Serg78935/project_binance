@@ -16,8 +16,6 @@ class SMACrossover(StrategyBase):
 
     def generate_signals(self):
         self.price_data['Signal'] = (self.price_data['SMA_Fast'] > self.price_data['SMA_Slow']).astype(int)
-        #self.entries_series = (self.price_data['SMA_Fast'] > self.price_data['SMA_Slow'])
-        #self.exits_series = ~self.entries_series
 
         # Визначаємо точки входу та виходу:
         self.price_data['Entry'] = (self.price_data['Signal'].shift(1) != 1) & (self.price_data['Signal'] == 1)
