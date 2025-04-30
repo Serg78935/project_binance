@@ -17,9 +17,9 @@ class Backtester:
         self.heatmap_data = []
 
     def run(self):
+        all_results = []
         
         for symbol, df_symbol in self.data.groupby("symbol"):
-        #for symbol in self.data['symbol'].unique():
             print(f"Running backtest for symbol {symbol}  for {self.strategy_name}...")
 
             df_symbol = self.data[self.data['symbol'] == symbol]
@@ -42,6 +42,7 @@ class Backtester:
 
             # Обчислення метрик
             metrics = compute_metrics(pf,symbol, self.strategy_name)
+            equity_curve = pf.value()
             self.all_metrics.append(metrics)
 
             self.heatmap_data.append({
@@ -54,14 +55,16 @@ class Backtester:
             })
 
             self.plot_equity_curve(symbol,pf)
+            all_results.append({
+                'symbol': symbol,
+                'equity_curve': equity_curve,
+                'metrics': metrics
+            })
 
         self.performance_heatmap()
         self.save_results()
-        results = {
-            'equity_curve': plot_equity_curve,
-            'metrics': metrics,
-        }
-        return results
+        
+        return all_results
     
     # Equity curve
     def plot_equity_curve(self,symbol,pf):    
