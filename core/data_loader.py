@@ -59,7 +59,6 @@ class DataLoader:
         url = "https://api.binance.com/api/v3/ticker/24hr"
         response = requests.get(url)
         data = response.json()
-        #client = Client("YOUR_API_KEY", "YOUR_API_SECRET")
         # Отримати всі пари BTC
         #data = client.get_ticker_24hr()
     
