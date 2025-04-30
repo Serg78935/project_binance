@@ -14,7 +14,7 @@ print(df.head())  # Переконайтесь, що дані є
 
 # Стратегії
 backtesters = [
-    Backtester(df, SMACrossover, "sma_cross"),
+   # Backtester(df, SMACrossover, "sma_cross"),
    # Backtester(df, RSI_Bollinger, "rsi_bb"),
    # Backtester(df, VWAPReversion, "vwap_reversion")
 ]
@@ -36,9 +36,9 @@ backtester.compare_strategies_full([
 
 
 end_time = time.time()
-#print(f"Backtest completed for ETHBTC in {end_time - start_time} seconds.")
+print(f"Backtest completed in {end_time - start_time} seconds.")
 
-print("Backtest завершено, результати збережено у results/metrics.csv")
+#print("Backtest завершено, результати збережено у results/metrics.csv")
 
 
 
