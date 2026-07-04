@@ -74,4 +74,6 @@ pytest tests/
 
 This project is actively maintained and open to contributions!
 
+For more information about the analytics tool, see [Binance Analytics Guide](./ANALYTICS_GUIDE.md)
+
 
